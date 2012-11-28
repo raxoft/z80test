@@ -50,15 +50,19 @@ TEST:       ld      (.spptr+1),sp
             ld      bc,vector
             ld      ix,.opcode
             
-            macro   combine n
+            macro   combine count,offset:0
+            repeat  count
             ld      a,(bc)
             xor     (hl)
             ex      de,hl
             xor     (hl)
-            ld      (ix+n),a
+            ld      (ix+(@#+offset)),a
+            if      @# < count-1
             inc     c
             inc     e
             inc     l
+            endif
+            endrepeat
             endm
 
             ld      a,(bc)
@@ -82,32 +86,16 @@ TEST:       ld      (.spptr+1),sp
             ld      a,(ix+0)
             and     0xDF        ; IX/IY prefix.
             cp      0xDD
-            jr      z,.next
+            jp      z,.next
 .ok         inc     c
             inc     e
             inc     l
 
-            combine 2
-            combine 3
+            combine opsize-2,2
 
             ld      ix,data
 
-            combine 0
-            combine 1
-            combine 2
-            combine 3
-            combine 4
-            combine 5
-            combine 6
-            combine 7
-            combine 8
-            combine 9
-            combine 10
-            combine 11
-            combine 12
-            combine 13
-            combine 14
-            combine 15
+            combine datasize
 
             ; test itself
 
@@ -241,15 +229,11 @@ TEST:       ld      (.spptr+1),sp
             pop     hl
             ret
 
-            org     dataaddr
+            align   256
 
-data
-.regs       ds      datasize-4
-.regstop
-.mem        ds      2
-.sp         ds      2
+            include crctab.asm
 
-            org     vectoraddr
+            align   256
 
 vector      ds      vecsize
 counter     ds      vecsize
@@ -257,3 +241,13 @@ countmask   ds      vecsize
 shifter     ds      1+vecsize
 shiftend
 shiftmask   ds      1+vecsize
+
+
+            org     0xa000
+
+data
+.regs       ds      datasize-4
+.regstop
+.mem        ds      2
+.sp         ds      2
+
