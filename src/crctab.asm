@@ -1,3 +1,6 @@
+; CRC table for the standard 100000100110000010001110110110111 polynomial.
+; Chunked little endian, the 256 LSBs first, the 256 MSBs last, for fast access.
+
 CRCTABLE:
             db      0x00    ; 00 00000000
             db      0x96    ; 01 77073096
