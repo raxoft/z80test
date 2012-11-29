@@ -131,27 +131,27 @@ TEST:       ld      (.spptr+1),sp
 
 .crcloop    ld      a,(hl)
             exx
-            xor     c
+            xor     e
 
             ld      l,a
             ld      h,CRCTABLE/256
             
             ld      a,(hl)
-            xor     b
-            ld      c,a
-            inc     h
-
-            ld      a,(hl)
-            xor     e
-            ld      b,a
-            inc     h
-
-            ld      a,(hl)
             xor     d
             ld      e,a
             inc     h
 
-            ld      d,(hl)
+            ld      a,(hl)
+            xor     c
+            ld      d,a
+            inc     h
+
+            ld      a,(hl)
+            xor     b
+            ld      c,a
+            inc     h
+
+            ld      b,(hl)
 
             exx
 
