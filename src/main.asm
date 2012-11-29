@@ -1,38 +1,103 @@
 
-        org     0x8000
+            org     0x8000
 
-MAIN:   di
-        push    iy
-        exx
-        push    hl
+MAIN:       di
+            push    iy
+            exx
+            push    hl
 
-        ld      hl,TESTS
+            call    PRINTINIT
 
-.loop   ld      e,(hl)
-        inc     hl
-        ld      d,(hl)
-        inc     hl
+            ld      hl,TESTS
+            jr      .entry
 
-        ld      a,d
-        or      e
-        jr      z,.exit
+.loop       push    hl
+            call    .test
+            pop     hl
 
-        push    hl
+.entry      ld      e,(hl)
+            inc     hl
+            ld      d,(hl)
+            inc     hl
 
-        ex      de,hl
+            ld      a,d
+            or      e
+            jr      nz,.loop
 
-        call    TEST
+            pop     hl
+            exx
+            pop     iy
+            ei
+            ret
 
-        pop     hl
+.test
+            ld      hl,1+3*vecsize
+            add     hl,de
+            push    hl
 
-        jr      .loop
+            call    PRINT
+            db      "Test:",0
 
-.exit   pop     hl
-        exx
-        pop     iy
-        ei
-        ret
+            ld      hl,1+3*vecsize+4
+            add     hl,de
 
-        include tests.asm
+            call    PRINTHL
 
-        include idea.asm
+            ex      de,hl
+
+            call    TEST
+
+            exx
+            ld      hl,.crc+3
+
+            ld      (hl),e
+            dec     hl
+            ld      (hl),d
+            dec     hl
+            ld      (hl),c
+            dec     hl
+            ld      (hl),b
+
+            pop     de
+
+            ld      b,4
+            call    .cmp
+
+            ret     z
+
+.mismatch   call    PRINT
+            db      "Failed!",13
+            db      "CRC:",0
+
+            call    PRINTCRC
+
+            call    PRINT
+            db      " Expected:",0
+
+            ex      de,hl
+            call    PRINTCRC
+
+            call    PRINT
+            db      13,0
+
+            ret
+
+.cmp        push    hl
+            push    de
+.cmploop    ld      a,(de)
+            cp      (hl)
+            jr      nz,.exit
+            inc     de
+            inc     hl
+            djnz    .cmploop
+.exit       pop     de
+            pop     hl
+            ret
+
+.crc        ds      4
+
+            include print.asm
+            include tests.asm
+            include idea.asm
+
+; EOF ;
