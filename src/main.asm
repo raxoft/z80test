@@ -1,19 +1,27 @@
 
             org     0x8000
 
-MAIN:       di
+main:       di
             push    iy
             exx
             push    hl
 
-            call    PRINTINIT
+            call    printinit
 
-            ld      hl,TESTS
+            ld      bc,0
+            ld      hl,testtable
             jr      .entry
 
 .loop       push    hl
+            push    bc
             call    .test
+            pop     bc
             pop     hl
+
+            add     a,b
+            ld      b,a
+
+            inc     c
 
 .entry      ld      e,(hl)
             inc     hl
@@ -24,28 +32,45 @@ MAIN:       di
             or      e
             jr      nz,.loop
 
+            call    print
+            db      13,"Result: ",0
+
+            ld      a,b
+            call    printdeca
+
+            call    print
+            db      " of ",0
+
+            ld      a,c
+            call    printdeca
+
+            call    print
+            db      " tests failed.",13,0
+
             pop     hl
             exx
             pop     iy
             ei
             ret
 
-.test
-            ld      hl,1+3*vecsize
+.test       ld      hl,1+3*vecsize
             add     hl,de
             push    hl
 
-            call    PRINT
-            db      "Test:",0
+            ld      a,c
+            call    printdeca
+
+            ld      a,' '
+            call    printchr
 
             ld      hl,1+3*vecsize+4
             add     hl,de
 
-            call    PRINTHL
+            call    printhl
 
             ex      de,hl
 
-            call    TEST
+            call    test
 
             exx
             ld      hl,.crc+3
@@ -63,29 +88,35 @@ MAIN:       di
             ld      b,4
             call    .cmp
 
-            ret     z
+            jr      nz,.mismatch
 
-.mismatch   call    PRINT
-            db      "Failed!",13
+            call    print
+            db      23,32-2,1,"OK",13,0
+
+            ret
+
+.mismatch   call    print
+            db      23,32-6,1,"FAILED",13
             db      "CRC:",0
 
-            call    PRINTCRC
+            call    printcrc
 
-            call    PRINT
-            db      " Expected:",0
+            call    print
+            db      "   Expected:",0
 
             ex      de,hl
-            call    PRINTCRC
+            call    printcrc
 
-            call    PRINT
-            db      13,0
+            ld      a,13
+            call    printchr
 
+            ld      a,1
             ret
 
 .cmp        push    hl
             push    de
 .cmploop    ld      a,(de)
-            cp      (hl)
+            xor     (hl)
             jr      nz,.exit
             inc     de
             inc     hl
