@@ -3,7 +3,7 @@ opsize      equ     4
 datasize    equ     16
 vecsize     equ     opsize+datasize
 
-TEST:       ld      (.spptr+1),sp
+test:       ld      (.spptr+1),sp
 
             ld      a,(hl)
             ld      (.flagptr+1),a
@@ -134,7 +134,7 @@ TEST:       ld      (.spptr+1),sp
             xor     e
 
             ld      l,a
-            ld      h,CRCTABLE/256
+            ld      h,crctable/256
             
             ld      a,(hl)
             xor     d
