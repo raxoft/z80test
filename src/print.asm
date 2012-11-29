@@ -1,31 +1,52 @@
 
 
-PRINTINIT:  ld      a,2
+printinit:  ld      a,2
             jp      0x1601      ; CHAN-OPEN
 
-PRINT:      ex      (sp),hl
-            call    PRINTHL
+
+print:      ex      (sp),hl
+            call    printhl
             ex      (sp),hl
             ret
 
-PRINTHL:
+printhl:
 .loop       ld      a,(hl)
             inc     hl
             or      a
             ret     z
-            call    PRINTCHR
+            call    printchr
             jr      .loop
 
-PRINTCRC:   ld      b,4
 
-PRINTHEXS:
+printdeca:  ld      h,a
+            ld      b,-100
+            call    .digit
+            ld      b,-10
+            call    .digit
+            ld      b,-1
+
+.digit      ld      a,h
+            ld      l,'0'-1
+.loop       inc     l
+            add     a,b
+            jr      c,.loop
+            sub     b
+            ld      h,a
+            ld      a,l
+            jr      printchr
+
+
+printcrc:   ld      b,4
+
+printhexs:
 .loop       ld      a,(hl)
             inc     hl
-            call    PRINTHEXA
+            call    printhexa
             djnz    .loop
             ret
 
-PRINTHEXA:  push    af
+
+printhexa:  push    af
             rrca
             rrca
             rrca
@@ -38,10 +59,16 @@ PRINTHEXA:  push    af
             add     a,0xa0
             adc     a,0x40
 
-PRINTCHR:   push    iy
+printchr:   push    iy
             ld      iy,0x5c3a   ; ERR-NR
+            push    de
+            push    bc
+            exx
             ei
             rst     0x10
             di
+            exx
+            pop     bc
+            pop     de
             pop     iy
             ret
