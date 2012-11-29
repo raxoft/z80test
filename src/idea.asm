@@ -48,15 +48,14 @@ test:       ld      (.spptr+1),sp
 .loop       ld      hl,counter
             ld      de,shifter+1
             ld      bc,vector
-            ld      ix,.opcode
             
-            macro   combine count,offset:0
+            macro   combine base,count,offset:0
             repeat  count
             ld      a,(bc)
             xor     (hl)
             ex      de,hl
             xor     (hl)
-            ld      (ix+(@#+offset)),a
+            ld      (base+offset+@#),a
             if      @# < count-1
             inc     c
             inc     e
@@ -71,7 +70,7 @@ test:       ld      (.spptr+1),sp
             xor     (hl)
             cp      0x76        ; halt
             jp      z,.next
-            ld      (ix+0),a
+            ld      (.opcode),a
             inc     c
             inc     e
             inc     l
@@ -80,10 +79,10 @@ test:       ld      (.spptr+1),sp
             xor     (hl)
             ex      de,hl
             xor     (hl)
-            ld      (ix+1),a
+            ld      (.opcode+1),a
             cp      0x76        ; halt
             jp      nz,.ok
-            ld      a,(ix+0)
+            ld      a,(.opcode)
             and     0xDF        ; IX/IY prefix.
             cp      0xDD
             jp      z,.next
@@ -91,11 +90,8 @@ test:       ld      (.spptr+1),sp
             inc     e
             inc     l
 
-            combine opsize-2,2
-
-            ld      ix,data
-
-            combine datasize
+            combine .opcode,opsize-2,2
+            combine data,datasize
 
             ; test itself
 
