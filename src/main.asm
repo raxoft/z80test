@@ -8,6 +8,9 @@ main:       di
 
             call    printinit
 
+            call    print
+            db      "Z80 flag tester  ",127," 2012 Raxoft",13,13,0
+
             ld      bc,0
             ld      hl,testtable
             jr      .entry
