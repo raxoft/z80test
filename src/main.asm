@@ -9,7 +9,21 @@ main:       di
             call    printinit
 
             call    print
-            db      "Z80 flag tester  ",127," 2012 Raxoft",13,13,0
+            db      "Z80 "
+            
+            if      maskflags
+            db      "doc "
+            endif
+
+            if      onlyflags
+            db      "flags "
+            else
+            db      "regs "
+            endif
+            
+            db      "test"
+            
+            db      23,32-13,1,127," 2012 RAXOFT",13,13,0
 
             ld      bc,0
             ld      hl,testtable
