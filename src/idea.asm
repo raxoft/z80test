@@ -5,8 +5,11 @@ vecsize     equ     opsize+datasize
 
 test:       ld      (.spptr+1),sp
 
+            if      maskflags
             ld      a,(hl)
             ld      (.flagptr+1),a
+            endif
+
             inc     hl
 
             ld      de,vector
@@ -36,9 +39,9 @@ test:       ld      (.spptr+1),sp
             call    .copy
 
             exx
-            ld      de,65535
-            ld      b,d
-            ld      c,e
+            ld      bc,65535
+            ld      d,b
+            ld      e,c
             exx
 
             ld      sp,data.regs
@@ -49,14 +52,14 @@ test:       ld      (.spptr+1),sp
             ld      de,shifter+1
             ld      bc,vector
             
-            macro   combine base,count,offset:0
+            macro   combine base,count,offset:0,last:1
             repeat  count
             ld      a,(bc)
             xor     (hl)
             ex      de,hl
             xor     (hl)
             ld      (base+offset+@#),a
-            if      @# < count-1
+            if      ( @# < count-1 ) | ! last
             inc     c
             inc     e
             inc     l
@@ -90,7 +93,7 @@ test:       ld      (.spptr+1),sp
             inc     e
             inc     l
 
-            combine .opcode,opsize-2,2
+            combine .opcode,opsize-2,2,0
             combine data,datasize
 
             ; test itself
@@ -116,16 +119,20 @@ test:       ld      (.spptr+1),sp
             
             ld      hl,data
 
+            if      maskflags
             ld      a,(hl)
 .flagptr    and     0xff
             ld      (hl),a
+            endif
 
             ; crc update
 
-;           ld      hl,data
+            if      ! onlyflags
             ld      b,datasize
+            endif
 
 .crcloop    ld      a,(hl)
+
             exx
             xor     e
 
@@ -151,9 +158,10 @@ test:       ld      (.spptr+1),sp
 
             exx
 
+            if      ! onlyflags
             inc     hl
-
             djnz    .crcloop
+            endif
 
             ; multibyte counter with arbitrary bit mask
 
@@ -246,4 +254,3 @@ data
 .regstop
 .mem        ds      2
 .sp         ds      2
-
