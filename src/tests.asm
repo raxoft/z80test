@@ -1,13 +1,22 @@
+
+selftests   equ     0
+
 testtable:
+            if      selftests
             dw      .crc
             dw      .counter
             dw      .shifter
+            endif
+
             dw      .selftest
+
             dw      0
 
             include testmacros.asm
 
             ; test vectors themselves.
+
+            if      selftests
 
 .crc        flags   s,1,z,1,f5,0,hc,1,f3,0,pv,1,n,1,c,1
             vec     0x00,0x00,0x00,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0xbbcc,de,0xddee,hl,0x4411,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -31,6 +40,7 @@ testtable:
             crcs    allflags,0x00000000,all,0xd690f8ac,docflags,0x3b3096d9,doc,0xc33c8068
             name    "SHIFTER TEST"
 
+            endif
 
 .selftest   flags   s,1,z,1,f5,0,hc,1,f3,0,pv,1,n,1,c,1
             vec     0x00,0x00,0x00,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0xbbcc,de,0xddee,hl,0x4411,ix,0xdd88,iy,0xfd77,sp,0xc000
