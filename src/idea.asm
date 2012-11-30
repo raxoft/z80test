@@ -122,7 +122,11 @@ test:       ld      (.spptr+1),sp
             if      maskflags
             ld      a,(hl)
 .flagptr    and     0xff
+
+            if      ! onlyflags
             ld      (hl),a
+            endif
+
             endif
 
             ; crc update
@@ -131,7 +135,9 @@ test:       ld      (.spptr+1),sp
             ld      b,datasize
             endif
 
+            if      ! ( onlyflags & maskflags )
 .crcloop    ld      a,(hl)
+            endif
 
             exx
             xor     e
