@@ -9,11 +9,9 @@ SRCS  := main idea crctab tests print
 
 all: $(addsuffix .tap,$(PROGS))
 
-%.out: %.asm $(addsuffix .asm,$(SRCS))
-
 .DELETE_ON_ERROR: %.out
 
-%.out : %.asm
+%.out : %.asm $(addsuffix .asm,$(SRCS))
 	sjasm $<
 
 %.tap : loader.bas %.out
