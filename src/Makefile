@@ -5,7 +5,7 @@ VERSION = 0.1
 PKG := $(NAME)-$(VERSION)
 
 PROGS := z80allregs z80allflag z80docregs z80docflag
-SRCS  := main idea crctab tests print
+SRCS  := main idea crctab tests testmacros print
 
 all: $(addsuffix .tap,$(PROGS))
 
