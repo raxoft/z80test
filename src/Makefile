@@ -4,12 +4,12 @@ NAME = z80ft
 VERSION = 0.1
 PKG := $(NAME)-$(VERSION)
 
-PROGS := z80ft
-SRCS  := idea crctab tests print
+PROGS := z80allregs z80allflag z80docregs z80docflag
+SRCS  := main idea crctab tests print
 
 all: $(addsuffix .tap,$(PROGS))
 
-z80ft.out: z80ft.asm $(addsuffix .asm,$(SRCS))
+%.out: %.asm $(addsuffix .asm,$(SRCS))
 
 .DELETE_ON_ERROR: %.out
 
