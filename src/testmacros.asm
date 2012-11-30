@@ -19,14 +19,9 @@
             endif
             endm
 
-            macro   vec op1,op2,op3,op4,memn,mem,an,a,fn,f,bcn,bc,den,de,hln,hl,ixn,ix,iyn,iy,spn,sp,fmaskn:fmask,fmask:%11010111
+            macro   vec op1,op2,op3,op4,memn,mem,an,a,fn,f,bcn,bc,den,de,hln,hl,ixn,ix,iyn,iy,spn,sp
             db      op1,op2,op3,op4
-            if      maskflags
-            db      f & fmask
-            else
-            db      f
-            endif
-            db      a
+            db      f,a
             dw      bc,de,hl,ix,iy
             dw      mem
             dw      sp
