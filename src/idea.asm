@@ -38,7 +38,12 @@ test:       ld      (.spptr+1),sp
 
             call    .copy
 
-            exx
+            ld      a,0xa9
+            ld      i,a
+            ld      r,a
+            or      a
+            ex      af,af
+
             ld      bc,65535
             ld      d,b
             ld      e,c
