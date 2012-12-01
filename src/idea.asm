@@ -219,7 +219,8 @@ test:       ld      (.spptr+1),sp
             ld      (.maskptr+1),hl
             ld      (.valptr+1),de
             jp      .loop
-.exit
+
+.exit       exx
 .spptr      ld      sp,0
             ret
 

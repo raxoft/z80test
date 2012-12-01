@@ -85,7 +85,6 @@ main:       di
 
             call    test
 
-            exx
             ld      hl,.crc+3
 
             ld      (hl),e
