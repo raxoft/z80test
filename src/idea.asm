@@ -91,8 +91,8 @@ test:       ld      (.spptr+1),sp
             cp      0x76        ; halt
             jp      nz,.ok
             ld      a,(.opcode)
-            and     0xDF        ; IX/IY prefix.
-            cp      0xDD
+            and     0xdf        ; IX/IY prefix.
+            cp      0xdd
             jp      z,.next
 .ok         inc     c
             inc     e
