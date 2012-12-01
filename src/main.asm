@@ -42,6 +42,9 @@ main:       di
             db      13,"Result: ",0
 
             ld      a,b
+            or      a
+            jr      z,.ok
+
             call    printdeca
 
             call    print
@@ -52,8 +55,12 @@ main:       di
 
             call    print
             db      " tests failed.",13,0
+            jr      .done
 
-            pop     hl
+.ok         call    print
+            db      "all tests passed.",13,0
+
+.done       pop     hl
             exx
             pop     iy
             ei
