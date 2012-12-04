@@ -266,3 +266,5 @@ data
 .regstop
 .mem        ds      2
 .sp         ds      2
+
+.jump       jp      test.opcode + opsize
