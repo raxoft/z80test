@@ -259,7 +259,7 @@ shiftend
 shiftmask   ds      1+vecsize
 
 
-            org     0xa000
+            org     0xb000
 
 data
 .regs       ds      datasize-4
