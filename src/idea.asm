@@ -262,7 +262,10 @@ data
 .mem        ds      2
 .sp         ds      2
 
-.jump       jp      test.opcode + opsize
+.jump       inc     bc
+            jp      test.opcode + opsize
+.ret        inc     bc
+            ret
 
 ; This entire workspace must be kept within one 256 page.
 
