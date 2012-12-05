@@ -140,7 +140,7 @@ main:       di
 .crc        ds      4
 
             include print.asm
-            include tests.asm
             include idea.asm
+            include tests.asm
 
 ; EOF ;

@@ -1,5 +1,5 @@
 
-selftests   equ     0
+selftests   equ     1
 
 mem         equ     data.mem
 meml        equ     mem%256
@@ -19,7 +19,7 @@ testtable:
 
             dw      .selftest
             
-            if 0
+            if 1
 
             dw      .ld_r_r
             dw      .ld_x_x

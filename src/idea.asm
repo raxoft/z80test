@@ -252,7 +252,19 @@ test:       ld      (.spptr+1),sp
 
             include crctab.asm
 
+; If this moves from 0x8800, all tests which use this address
+; will need to have their CRCs updated, so don't move it.
+
             align   256
+data
+.regs       ds      datasize-4
+.regstop
+.mem        ds      2
+.sp         ds      2
+
+.jump       jp      test.opcode + opsize
+
+; This entire workspace must be kept within one 256 page.
 
 vector      ds      vecsize
 counter     ds      vecsize
@@ -261,13 +273,4 @@ shifter     ds      1+vecsize
 shiftend
 shiftmask   ds      1+vecsize
 
-
-            org     0xb000
-
-data
-.regs       ds      datasize-4
-.regstop
-.mem        ds      2
-.sp         ds      2
-
-.jump       jp      test.opcode + opsize
+; EOF ;
