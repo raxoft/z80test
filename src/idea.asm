@@ -37,6 +37,9 @@ test:       ld      (.spptr+1),sp
             inc     de
 
             call    .copy
+            
+            ld      a,0x07
+            out     (0xfe),a
 
             ld      a,0xa9
             ld      i,a
