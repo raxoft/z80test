@@ -65,6 +65,7 @@ printchr:   push    iy
             push    bc
             exx
             ei
+            ; out     (0xff),a
             rst     0x10
             di
             exx
