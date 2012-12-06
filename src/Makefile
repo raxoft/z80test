@@ -1,10 +1,10 @@
 # gmake
 
-NAME = z80ft
+NAME = z80test
 VERSION = 0.1
 PKG := $(NAME)-$(VERSION)
 
-PROGS := z80allregs z80allflag z80docregs z80docflag
+PROGS := z80full z80flags z80doc z80docflags
 SRCS  := main idea crctab tests testmacros print
 
 all: $(addsuffix .tap,$(PROGS))
