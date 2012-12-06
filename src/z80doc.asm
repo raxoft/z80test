@@ -1,6 +1,6 @@
 
             macro       testname
-            db          "doc regs"
+            db          "doc"
             endm
 
 maskflags   equ         1

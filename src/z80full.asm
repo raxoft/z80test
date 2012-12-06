@@ -1,6 +1,6 @@
 
             macro       testname
-            db          "regs"
+            db          "full"
             endm
 
 maskflags   equ         0
