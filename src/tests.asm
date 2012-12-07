@@ -4,7 +4,7 @@
 ;
 ; This source code is released under the MIT license, see included license.txt.
 
-selftests   equ     0
+selftests   equ     0           ; Set to 1 to include detailed self tests.
 
 mem         equ     data.mem
 meml        equ     mem%256
@@ -220,6 +220,25 @@ testtable:
             include testmacros.asm
 
             ; Test vector template.
+            ; 
+            ; Each test consists of the following:
+            ; - Bitmask of which of the modified flags are officially documented.
+            ; - Three test vectors - base test vector, counter vector and shifter vector.
+            ; - The CRCs for each of the available test variants.
+            ; - Test name.
+            ;
+            ; The base test vectors specifies the instruction(s) to execute,
+            ; the initial value of the memory operand, and the initial
+            ; values of the Z80 registers.
+            ;
+            ; The counter vector specifies which combinations of bits shall
+            ; be toggled in the base test vectors. The test vector is
+            ; executed once for each possible combination.
+            ;
+            ; The shifter vector specifies which bits shall be toggled in
+            ; the test vector in sequence. After all the initial counter
+            ; combinations were executed, the whole process is repeated, but
+            ; now also toggling one of the specified shifter bits at a time.
 
             if 0
             flags   s,1,z,1,f5,0,hc,1,f3,0,pv,1,n,1,c,1
@@ -238,7 +257,6 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0xbbcc,de,0xddee,hl,0x4411,ix,0xdd88,iy,0xfd77,sp,0xc000
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0x00,f,0x00,bc,0x0000,de,0x0000,hl,0x0000,ix,0x0000,iy,0x0000,sp,0x0000
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0x00,f,0x00,bc,0x0000,de,0x0000,hl,0x0000,ix,0x0000,iy,0x0000,sp,0x0000
-;           crcs    allflags,0xaf0f0011,all,0xac0f0022,docflags,0xdf0f0033,doc,0xdc0f0044,ccf,0x0,mptr,0x0
             crcs    allflags,0x00ffffff,all,0x2e26825b,docflags,0x354a5705,doc,0x4a0a6669,ccf,0xb062bcdf,mptr,0x4996b8b2
             name    "CRC TEST"
 
