@@ -43,7 +43,7 @@
             if      postccf
 
             if      ( .@veccount % 3 ) == 0
-            inst    op1,op2,op3,op4,0x3f
+            inst    op1,op2,op3,op4,tail
 .@freg      :=      0
             else
             db      op1,op2,op3,op4,0
