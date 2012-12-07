@@ -4,7 +4,6 @@
 ;
 ; This source code is released under the MIT license, see included license.txt.
 
-
             org     0x8000
 
 main:       di
