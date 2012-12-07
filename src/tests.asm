@@ -1,5 +1,5 @@
 
-selftests   equ     1
+selftests   equ     0
 
 mem         equ     data.mem
 meml        equ     mem%256
