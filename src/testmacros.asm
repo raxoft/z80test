@@ -44,23 +44,24 @@
 
             if      ( .@veccount % 3 ) == 0
             inst    op1,op2,op3,op4,tail
-.@freg      :=      0
+.@areg      :=      0
             else
             db      op1,op2,op3,op4,0
-.@freg      :=      .@freg | f
+.@areg      :=      .@areg | a
             endif
 
             else
             db      op1,op2,op3,op4
             endif
 
-            if      postccf & ( ( .veccount % 3 ) == 2 )
-            db      f | ( ( ~ .@freg ) & 0x28 )
-            else
             db      f
+
+            if      postccf & ( ( .veccount % 3 ) == 2 )
+            db      a | ( ( ~ .@areg ) & 0x28 )
+            else
+            db      a
             endif
 
-            db      a
             dw      bc,de,hl,ix,iy
             dw      mem
             dw      sp
