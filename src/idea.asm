@@ -1,5 +1,5 @@
 
-opsize      equ     4
+opsize      equ     4+postccf
 datasize    equ     16
 vecsize     equ     opsize+datasize
 
@@ -115,6 +115,11 @@ test:       ld      (.spptr+1),sp
             ld      sp,(data.sp)
 
 .opcode     ds      opsize
+.continue
+            if      memptr
+            ld      hl,data
+            bit     0,(hl)
+            endif
 
             ld      (data.sp),sp
             ld      sp,data.regstop
@@ -262,10 +267,13 @@ data
 .mem        ds      2
 .sp         ds      2
 
-.jump       inc     bc
-            jp      test.opcode + opsize
-.ret        inc     bc
-            ret
+.jump
+            if      postccf
+            ccf
+            else
+            inc     bc
+            endif
+            jp      test.continue
 
 ; This entire workspace must be kept within one 256 page.
 
