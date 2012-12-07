@@ -10,23 +10,8 @@
             db      (n>>8)&0xff
             db      n&0xff
             endm
-            
-            macro   flags sn,s,zn,z,f5n,f5,hcn,hc,f3n,f3,pvn,pv,nn,n,cn,c
-            if      maskflags
-            db8     s,z,f5,hc,f3,pv,n,c
-            else
-            db      0xff
-            endif
-            endm
 
-.veccount := 0
-
-            macro   vec op1,op2,op3,op4,memn,mem,an,a,fn,f,bcn,bc,den,de,hln,hl,ixn,ix,iyn,iy,spn,sp
-
-            if      stop > 255
-
-            if      ( .@veccount % 3 ) == 0
-
+            macro   inst op1,op2,op3,op4,tail
             ; Unfortunately, elseifidn doesn't seem to work properly.
             ifidn   op4,stop
             db      op1,op2,op3,tail,0
@@ -41,7 +26,24 @@
             endif
             endif
             endif
+            endm
 
+            macro   flags sn,s,zn,z,f5n,f5,hcn,hc,f3n,f3,pvn,pv,nn,n,cn,c
+            if      maskflags
+            db8     s,z,f5,hc,f3,pv,n,c
+            else
+            db      0xff
+            endif
+            endm
+
+.veccount := 0
+
+            macro   vec op1,op2,op3,op4,memn,mem,an,a,fn,f,bcn,bc,den,de,hln,hl,ixn,ix,iyn,iy,spn,sp
+
+            if      postccf
+
+            if      ( .@veccount % 3 ) == 0
+            inst    op1,op2,op3,op4,0x3f
             else
             db      op1,op2,op3,op4,0
             endif

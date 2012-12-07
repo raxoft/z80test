@@ -12,7 +12,6 @@ jmph        equ     jmp/256
 
             if      postccf
 stop        equ     256
-tail        equ     0x3f
             else
 stop        equ     0
             endif
