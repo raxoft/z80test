@@ -69,7 +69,12 @@
 
             endm
 
-            macro   crcs allflagsn,allflags,alln,all,docflagsn,docflags,docn,doc
+            macro   crcs allflagsn,allflags,alln,all,docflagsn,docflags,docn,doc,ccfn,ccf,mptrn,mptr
+            if      postccf
+            ddbe    ccf
+            elseif    memptr
+            ddbe    mptr
+            else
             if      maskflags
             if      onlyflags
             ddbe   docflags
@@ -81,6 +86,7 @@
             ddbe   allflags
             else
             ddbe   all
+            endif
             endif
             endif
             endm
