@@ -1,3 +1,8 @@
+; The Z80 tester.
+;
+; Copyright (C) 2012 Patrik Rak (patrik@raxoft.cz)
+;
+; This source code is released under the MIT license, see included license.txt.
 
 opsize      equ     4+postccf
 datasize    equ     16
@@ -38,16 +43,16 @@ test:       ld      (.spptr+1),sp
 
             call    .copy
             
-            ld      a,0x07
-            out     (0xfe),a
+            ld      a,0x07          ; Make sure we get 0
+            out     (0xfe),a        ; on MIC bit when doing IN.
 
-            ld      a,0xa9
+            ld      a,0xa9          ; Set I,R,AF' to known values.
             ld      i,a
             ld      r,a
             or      a
             ex      af,af
 
-            ld      bc,65535
+            ld      bc,65535        ; Init CRC.
             ld      d,b
             ld      e,c
             exx

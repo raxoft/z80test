@@ -1,3 +1,8 @@
+; Simple printing module.
+;
+; Copyright (C) 2012 Patrik Rak (patrik@raxoft.cz)
+;
+; This source code is released under the MIT license, see included license.txt.
 
 
 printinit:  ld      a,2
@@ -73,3 +78,5 @@ printchr:   push    iy
             pop     de
             pop     iy
             ret
+
+; EOF ;

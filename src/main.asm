@@ -1,3 +1,9 @@
+; Main driver for the Z80 tester.
+;
+; Copyright (C) 2012 Patrik Rak (patrik@raxoft.cz)
+;
+; This source code is released under the MIT license, see included license.txt.
+
 
             org     0x8000
 
@@ -85,7 +91,7 @@ main:       di
 
             call    test
 
-            ld      hl,.crc+3
+            ld      hl,data+3
 
             ld      (hl),e
             dec     hl
@@ -136,8 +142,6 @@ main:       di
 .exit       pop     de
             pop     hl
             ret
-
-.crc        ds      4
 
             include print.asm
             include idea.asm

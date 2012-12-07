@@ -1,3 +1,8 @@
+; The test vectors themselves.
+;
+; Copyright (C) 2012 Patrik Rak (patrik@raxoft.cz)
+;
+; This source code is released under the MIT license, see included license.txt.
 
 selftests   equ     0
 
@@ -214,7 +219,7 @@ testtable:
 
             include testmacros.asm
 
-            ; test vectors themselves.
+            ; Test vector template.
 
             if 0
             flags   s,1,z,1,f5,0,hc,1,f3,0,pv,1,n,1,c,1
@@ -225,7 +230,7 @@ testtable:
             name    " "
             endif
 
-            ; various selftests.
+            ; Various selftests.
 
             if      selftests
 
