@@ -4,20 +4,20 @@
 ;
 ; This source code is released under the MIT license, see included license.txt.
 
-opsize      equ     4+postccf
-datasize    equ     16
-vecsize     equ     opsize+datasize
+opsize      equ     4+postccf       ; Size of the tested instruction sequence.
+datasize    equ     16              ; Size of the tested registers and data.
+vecsize     equ     opsize+datasize ; Size of entire test vector.
 
 test:       ld      (.spptr+1),sp
 
-            if      maskflags
-            ld      a,(hl)
+            if      maskflags       ; Keep mask for official flags.
+            ld      a,(hl)          
             ld      (.flagptr+1),a
             endif
 
             inc     hl
 
-            ld      de,vector
+            ld      de,vector       ; Init the test vector, counter and shifter.
             ld      bc,vecsize
             call    .copy
 
@@ -59,7 +59,7 @@ test:       ld      (.spptr+1),sp
 
             ld      sp,data.regs
 
-            ; sequence combinator
+            ; Test vector sequence combinator.
 
 .loop       ld      hl,counter
             ld      de,shifter+1
@@ -84,7 +84,7 @@ test:       ld      (.spptr+1),sp
             xor     (hl)
             ex      de,hl
             xor     (hl)
-            cp      0x76        ; halt
+            cp      0x76        ; Skip halt.
             jp      z,.next
             ld      (.opcode),a
             inc     c
@@ -96,10 +96,10 @@ test:       ld      (.spptr+1),sp
             ex      de,hl
             xor     (hl)
             ld      (.opcode+1),a
-            cp      0x76        ; halt
+            cp      0x76        ; Skip halt...
             jp      nz,.ok
             ld      a,(.opcode)
-            and     0xdf        ; IX/IY prefix.
+            and     0xdf        ; ... with IX/IY prefix.
             cp      0xdd
             jp      z,.next
 .ok         inc     c
@@ -109,7 +109,7 @@ test:       ld      (.spptr+1),sp
             combine .opcode,opsize-2,2,0
             combine data,datasize
 
-            ; test itself
+            ; The test itself.
 
             pop     af
             pop     bc
@@ -147,7 +147,7 @@ test:       ld      (.spptr+1),sp
 
             endif
 
-            ; crc update
+            ; CRC update.
 
             if      ! onlyflags
             ld      b,datasize
@@ -187,8 +187,7 @@ test:       ld      (.spptr+1),sp
             djnz    .crcloop
             endif
 
-            ; multibyte counter with arbitrary bit mask
-
+            ; Multibyte counter with arbitrary bit mask.
 
 .next       ld      hl,countmask
             ld      de,counter
@@ -206,7 +205,7 @@ test:       ld      (.spptr+1),sp
             inc     e
             djnz    .countloop
 
-            ; multibyte shifter with arbitrary bit mask
+            ; Multibyte shifter with arbitrary bit mask.
 
 .maskptr    ld      hl,shiftmask
 .valptr     ld      de,shifter
@@ -237,7 +236,7 @@ test:       ld      (.spptr+1),sp
 .spptr      ld      sp,0
             ret
 
-            ; misc helper routines
+            ; Misc helper routines.
 
 .copy       push    hl
             push    bc
@@ -280,7 +279,7 @@ data
             endif
             jp      test.continue
 
-; This entire workspace must be kept within one 256 page.
+; This entire workspace must be kept within single 256 byte page.
 
 vector      ds      vecsize
 counter     ds      vecsize
