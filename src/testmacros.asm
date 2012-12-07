@@ -19,12 +19,44 @@
             endif
             endm
 
+.veccount := 0
+
             macro   vec op1,op2,op3,op4,memn,mem,an,a,fn,f,bcn,bc,den,de,hln,hl,ixn,ix,iyn,iy,spn,sp
+
+            if      stop > 255
+
+            if      ( .@veccount % 3 ) == 0
+
+            ; Unfortunately, elseifidn doesn't seem to work properly.
+            ifidn   op4,stop
+            db      op1,op2,op3,tail,0
+            else
+            ifidn   op3,stop
+            db      op1,op2,tail,op4,0
+            else
+            ifidn   op2,stop
+            db      op1,tail,op3,op4,0
+            else
+            db      op1,op2,op3,op4,tail
+            endif
+            endif
+            endif
+
+            else
+            db      op1,op2,op3,op4,0
+            endif
+
+            else
             db      op1,op2,op3,op4
+            endif
+
             db      f,a
             dw      bc,de,hl,ix,iy
             dw      mem
             dw      sp
+
+.@veccount := .@veccount+1
+
             endm
 
             macro   crcs allflagsn,allflags,alln,all,docflagsn,docflags,docn,doc
