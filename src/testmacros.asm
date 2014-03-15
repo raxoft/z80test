@@ -60,7 +60,7 @@
 
             db      f
 
-            if      postccf & ( ( .veccount % 3 ) == 2 )
+            if      postccf & ( ( .@veccount % 3 ) == 2 )
             db      a | ( ( ~ .@areg ) & 0x28 )
             else
             db      a
@@ -77,20 +77,20 @@
             macro   crcs allflagsn,allflags,alln,all,docflagsn,docflags,docn,doc,ccfn,ccf,mptrn,mptr
             if      postccf
             ddbe    ccf
-            elseif    memptr
+            elseif  memptr
             ddbe    mptr
             else
             if      maskflags
             if      onlyflags
-            ddbe   docflags
+            ddbe    docflags
             else
-            ddbe   doc
+            ddbe    doc
             endif
             else
             if      onlyflags
-            ddbe   allflags
+            ddbe    allflags
             else
-            ddbe   all
+            ddbe    all
             endif
             endif
             endif
