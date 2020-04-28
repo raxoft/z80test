@@ -23,8 +23,7 @@ FILES := Makefile loader.bas $(addsuffix .asm,$(PROGS)) $(addsuffix .asm, $(SRCS
 dist: all
 	ln -s .. $(PKG)
 	cp *.tap $(PKG)
-	tar czf ../$(PKG).tar.gz --group=root --owner=root $(addprefix $(PKG)/src/, $(FILES)) $(PKG)/*.*
-	zip ../$(PKG).zip $(addprefix $(PKG)/src/, $(FILES)) $(PKG)/*.txt $(PKG)/*.*
+	zip ../$(PKG).zip $(addprefix $(PKG)/src/, $(FILES)) $(PKG)/*.txt $(PKG)/*.tap
 	rm $(PKG)/*.tap
 	rm $(PKG)
 
