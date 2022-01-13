@@ -6,6 +6,10 @@
 
 selftests   equ     0           ; Set to 1 to include detailed self tests.
 
+failcheck   equ     0           ; Run the test only after some prior failure.
+incheck     equ     1           ; Fail and skip the test in case of IN mismatch.
+nocheck     equ     255         ; No special check needed.
+
 mem         equ     data.mem
 meml        equ     mem%256
 memh        equ     mem/256
@@ -230,6 +234,7 @@ testtable:
             ; - Three test vectors - base test vector, counter vector and shifter vector.
             ; - The CRCs for each of the available test variants.
             ; - Test name.
+            ; - Type of test pre-check, if any.
             ;
             ; The base test vectors specifies the instruction(s) to execute,
             ; the initial value of the memory operand, and the initial
@@ -243,6 +248,9 @@ testtable:
             ; the test vector in sequence. After all the initial counter
             ; combinations were executed, the whole process is repeated, but
             ; now also toggling one of the specified shifter bits at a time.
+            ;
+            ; The pre-check byte specifies if the test should be skipped and under what condition.
+            ; Note that it is seldom needed so most often I abuse the flags byte of the following test instead.
 
             if 0
             flags   s,1,z,1,f5,0,hc,1,f3,0,pv,1,n,1,c,1
@@ -309,6 +317,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0xd7,f,0x00,bc,0x0000,de,0x0000,hl,0x0000,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0x958e3e1e,all,0x45fc79b5,docflags,0xafbf608b,doc,0x2efb018b,ccf,0xe0d3c7bf,mptr,0x4fc0a073
             name    "SCF (NEC)"
+            db      failcheck
 
 .ccf_nec    flags   s,1,z,1,f5,0,hc,0,f3,0,pv,1,n,1,c,1
             vec     0x3f,stop,0x00,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0xbbcc,de,0xddee,hl,0x4411,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -316,6 +325,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0xd7,f,0x00,bc,0x0000,de,0x0000,hl,0x0000,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0xf06c5f84,all,0xa206b5e3,docflags,0x27b2462c,doc,0x96bd3c82,ccf,0x8531a625,mptr,0xc7cd86d4
             name    "CCF (NEC)"
+            db      failcheck
 
 .scf_st     flags   s,1,z,1,f5,0,hc,1,f3,0,pv,1,n,1,c,1
             vec     0x37,stop,0x00,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0xbbcc,de,0xddee,hl,0x4411,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -323,6 +333,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0xd7,f,0x00,bc,0x0000,de,0x0000,hl,0x0000,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0xc62af5ee,all,0x58e950e4,docflags,0xafbf608b,doc,0x2efb018b,ccf,0xe0d3c7bf,mptr,0x4fc0a073
             name    "SCF (ST)"
+            db      failcheck
 
 .ccf_st     flags   s,1,z,1,f5,0,hc,0,f3,0,pv,1,n,1,c,1
             vec     0x3f,stop,0x00,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0xbbcc,de,0xddee,hl,0x4411,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -330,6 +341,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0xd7,f,0x00,bc,0x0000,de,0x0000,hl,0x0000,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0xa3c89474,all,0xbf139cb2,docflags,0x27b2462c,doc,0x96bd3c82,ccf,0x8531a625,mptr,0xc7cd86d4
             name    "CCF (ST)"
+            db      failcheck
 
 .scfccf     flags   s,1,z,1,f5,0,hc,0,f3,0,pv,1,n,1,c,1
             vec     0x37,0x3f,stop,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0xbbcc,de,0xddee,hl,0x4411,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -955,6 +967,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0x00,f,0xff,bc,0x0000,de,0x0000,hl,0x0000,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0x919e2255,all,0x15f7d9b8,docflags,0x919e2255,doc,0x15f7d9b8,ccf,0xc3f6460b,mptr,0x253c1992
             name    "IN A,(N)"
+            db      incheck
 
 .in_r_c    flags   s,1,z,1,f5,0,hc,1,f3,0,pv,1,n,1,c,1
             vec     0xed,0x40,stop,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0xbbfe,de,0xddee,hl,0x4411,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -962,6 +975,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0x00,f,0xff,bc,0x0000,de,0x0000,hl,0x0000,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0x61f21a52,all,0xea2912bf,docflags,0xb6433321,doc,0x9c9c07ec,ccf,0x4801a633,mptr,0x587e9d23
             name    "IN R,(C)"
+            db      incheck
 
 .in_c       flags   s,1,z,1,f5,0,hc,1,f3,0,pv,1,n,1,c,1
             vec     0xed,0x70,stop,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0xbbfe,de,0xddee,hl,0x4411,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -969,6 +983,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0x00,f,0xff,bc,0x0000,de,0x0000,hl,0x0000,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0x8f4b242f,all,0x68392c0e,docflags,0x41dd7fcb,doc,0xb285546f,ccf,0x1efcf040,mptr,0x253c1992
             name    "IN (C)"
+            db      incheck
 
 .ini        flags   s,0,z,1,f5,0,hc,0,f3,0,pv,0,n,0,c,0
             vec     0xed,0xa2,stop,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0x00fe,de,0xddee,hl,mem   ,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -976,6 +991,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0x00,f,0xff,bc,0x0000,de,0x0000,hl,0x0001,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0x45c2bf9a,all,0x03da7534,docflags,0xdf14e043,doc,0x07d1b0d1,ccf,0x3c480ae3,mptr,0x630733cb
             name    "INI"
+            db      incheck
 
 .ind        flags   s,0,z,1,f5,0,hc,0,f3,0,pv,0,n,0,c,0
             vec     0xed,0xaa,stop,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0x00fe,de,0xddee,hl,mem   ,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -983,6 +999,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0x00,f,0xff,bc,0x0000,de,0x0000,hl,0x0001,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0xa349e955,all,0x4c306b87,docflags,0xdf14e043,doc,0x3dc685fa,ccf,0xc90849ab,mptr,0x630733cb
             name    "IND"
+            db      incheck
 
 .inir       flags   s,0,z,1,f5,0,hc,0,f3,0,pv,0,n,0,c,0
             vec     0xed,0xb2,stop,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0x01fe,de,0xddee,hl,mem   ,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -990,6 +1007,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0x00,f,0xff,bc,0x0200,de,0x0000,hl,0x0001,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0x95f331a2,all,0xb1c580a1,docflags,0x550e6d82,doc,0xf9e081a3,ccf,0x34683092,mptr,0x371c7dba
             name    "INIR"
+            db      incheck
 
 .indr       flags   s,0,z,1,f5,0,hc,0,f3,0,pv,0,n,0,c,0
             vec     0xed,0xba,stop,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0x01fe,de,0xddee,hl,mem+1 ,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -997,6 +1015,7 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0x00,f,0xff,bc,0x0200,de,0x0000,hl,0x0001,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0x845343ff,all,0x88f004aa,docflags,0x550e6d82,doc,0x62e607cf,ccf,0xe6771326,mptr,0x371c7dba
             name    "INDR"
+            db      incheck
 
 .out_n_a    flags   s,1,z,1,f5,1,hc,1,f3,1,pv,1,n,1,c,1
             vec     0xd3,0xfe,stop,0x00,mem,0x1234,a,0xaa,f,0xff,bc,0xbbcc,de,0xddee,hl,0x4411,ix,0xdd88,iy,0xfd77,sp,0xc000
@@ -1407,5 +1426,6 @@ testtable:
             vec     0x00,0x00,0x00,0x00,mem,0x0000,a,0x00,f,0xff,bc,0x0000,de,0x0000,hl,0x0000,ix,0x0000,iy,0x0000,sp,0x0000
             crcs    allflags,0x8b69e182,all,0x44056d8c,docflags,0x8b69e182,doc,0x44056d8c,ccf,0x05e705e5,mptr,0xb4eabc1f
             name    "IM N"
+            db      nocheck
 
 ; EOF ;

@@ -71,9 +71,7 @@ main:       di                                  ; disable interrupts
             ei
             ret
 
-.test       ld      hl,1+3*vecsize              ; store expected CRC address
-            add     hl,de
-            push    hl
+.test       push    bc                          ; preserve number of failures
 
             ld      a,c                         ; print test number
             call    printdeca
@@ -85,6 +83,45 @@ main:       di                                  ; disable interrupts
             add     hl,de
 
             call    printhl
+
+            pop     bc                          ; restore number of failures
+
+            ld      a,(hl)                      ; see if some special check is needed
+            cp      1
+            jr      z,.incheck
+            jr      nc,.pass
+
+.failcheck  or      b                           ; some prior failure means do the test
+            jr      nz,.pass
+
+            call    print                       ; print that the test was skipped
+            db      23,32-7,1,"Skipped",13,0
+
+            ret                                 ; return success
+
+.incheck    xor     a                           ; expected IN value means do the test
+            in      a,(0xfe)
+            cp      0xbf                        ; %10111111 - just MIC bit is zero
+            jr      z,.pass
+
+            ld      e,a
+
+            call    print                       ; print the IN mismatch message
+            db      23,32-6,1,"FAILED",13
+            db      "IN FE:",0
+
+            ld      a,e
+            call    printhexa
+
+            call    print
+            db      23,32-11,1,"Expected:BF",13,0
+
+            ld      a,1                         ; return failure
+            ret
+
+.pass       ld      hl,1+3*vecsize              ; store expected CRC address
+            add     hl,de
+            push    hl
 
             ex      de,hl                       ; run the test with test vector at HL
 
