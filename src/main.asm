@@ -6,51 +6,51 @@
 
             org     0x8000
 
-main:       di
-            push    iy
+main:       di                                  ; disable interrupts
+            push    iy                          ; preserve stuff needed by BASIC
             exx
             push    hl
 
-            call    printinit
+            call    printinit                   ; init printing module
 
-            call    print
+            call    print                       ; print the header
             db      "Z80 "
             testname
             db      " test"
             db      23,32-13,1,127," 2012 RAXOFT",13,13,0
 
-            ld      bc,0
+            ld      bc,0                        ; setup for test loop
             ld      hl,testtable
             jr      .entry
 
-.loop       push    hl
+.loop       push    hl                          ; call the test wrapper
             push    bc
             call    .test
             pop     bc
             pop     hl
 
-            add     a,b
+            add     a,b                         ; accumulate failures
             ld      b,a
 
-            inc     c
+            inc     c                           ; count number of tests
 
-.entry      ld      e,(hl)
+.entry      ld      e,(hl)                      ; fetch test address
             inc     hl
             ld      d,(hl)
             inc     hl
 
-            ld      a,d
+            ld      a,d                         ; loop until we are done
             or      e
             jr      nz,.loop
 
-            call    print
+            call    print                       ; print result intro
             db      13,"Result: ",0
 
-            ld      a,b
+            ld      a,b                         ; no failures means success
             or      a
             jr      z,.ok
 
-            call    printdeca
+            call    printdeca                   ; print number of failed tests
 
             call    print
             db      " of ",0
@@ -62,35 +62,35 @@ main:       di
             db      " tests failed.",13,0
             jr      .done
 
-.ok         call    print
+.ok         call    print                       ; print success message
             db      "all tests passed.",13,0
 
-.done       pop     hl
+.done       pop     hl                          ; return to BASIC
             exx
             pop     iy
             ei
             ret
 
-.test       ld      hl,1+3*vecsize
+.test       ld      hl,1+3*vecsize              ; store expected CRC address
             add     hl,de
             push    hl
 
-            ld      a,c
+            ld      a,c                         ; print test number
             call    printdeca
 
             ld      a,' '
             call    printchr
 
-            ld      hl,1+3*vecsize+4
+            ld      hl,1+3*vecsize+4            ; print test name
             add     hl,de
 
             call    printhl
 
-            ex      de,hl
+            ex      de,hl                       ; run the test with test vector at HL
 
             call    test
 
-            ld      hl,data+3
+            ld      hl,data+3                   ; store computed CRC
 
             ld      (hl),e
             dec     hl
@@ -100,19 +100,19 @@ main:       di
             dec     hl
             ld      (hl),b
 
-            pop     de
+            pop     de                          ; get expected CRC address
 
-            ld      b,4
+            ld      b,4                         ; compare CRCs
             call    .cmp
 
-            jr      nz,.mismatch
+            jr      nz,.mismatch                ; check for mismatch
 
-            call    print
+            call    print                       ; print success
             db      23,32-2,1,"OK",13,0
 
-            ret
+            ret                                 ; return success
 
-.mismatch   call    print
+.mismatch   call    print                       ; print mismatched and expected CRC
             db      23,32-6,1,"FAILED",13
             db      "CRC:",0
 
@@ -127,10 +127,10 @@ main:       di
             ld      a,13
             call    printchr
 
-            ld      a,1
+            ld      a,1                         ; return failure
             ret
 
-.cmp        push    hl
+.cmp        push    hl                          ; compare B bytes at HL and DE
             push    de
 .cmploop    ld      a,(de)
             xor     (hl)
