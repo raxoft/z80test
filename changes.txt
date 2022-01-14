@@ -1,3 +1,10 @@
+1.1 (16.1.2022)
+
++ Added variants of SCF and CCF tests for Z80 CPUs made by NEC and ST (SGS+Thomson).
++ Added tests for LDxR and INxR block instructions which overwrite itself.
++ Avoid and report any IN related tests if the IN(0xFE) value doesn't match the expected one.
+* Fixed INDR test to really test INDR, not INIR.
+
 1.0 (7.12.2012)
 
 + First release.
