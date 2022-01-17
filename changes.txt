@@ -1,3 +1,7 @@
+1.1a (17.1.2022)
+
+* Aligned the test to fixed address so minor changes in the main loop don't affect the CRCs.
+
 1.1 (16.1.2022)
 
 + Added variants of SCF and CCF tests for Z80 CPUs made by NEC and ST (SGS+Thomson).
