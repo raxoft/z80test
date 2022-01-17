@@ -116,7 +116,7 @@ main:       di                                  ; disable interrupts
             call    print
             db      23,32-11,1,"Expected:BF",13,0
 
-            ld      a,1                         ; return failure
+            inc     a                           ; return failure
             ret
 
 .pass       ld      hl,1+3*vecsize              ; store expected CRC address
@@ -180,6 +180,9 @@ main:       di                                  ; disable interrupts
             ret
 
             include print.asm
+
+            align   256
+
             include idea.asm
             include tests.asm
 
