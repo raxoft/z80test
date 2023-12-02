@@ -1,6 +1,6 @@
 ; Z80 test - officially documented flags, flags only version.
 ;
-; Copyright (C) 2012-2022 Patrik Rak (patrik@raxoft.cz)
+; Copyright (C) 2012-2023 Patrik Rak (patrik@raxoft.cz)
 ;
 ; This source code is released under the MIT license, see included license.txt.
 

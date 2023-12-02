@@ -1,6 +1,6 @@
 ; Z80 test - monitor random behavior of bits 5 and 3 after CCF.
 ;
-; Copyright (C) 2022 Patrik Rak (patrik@raxoft.cz)
+; Copyright (C) 2023 Patrik Rak (patrik@raxoft.cz)
 ;
 ; This source code is released under the MIT license, see included license.txt.
 

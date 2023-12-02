@@ -1,7 +1,7 @@
 ; CRC table for the standard 100000100110000010001110110110111 polynomial.
 ; Chunked little endian, the 256 LSBs first, the 256 MSBs last, for fast access.
 ;
-; Copyright (C) 2012-2022 Patrik Rak (patrik@raxoft.cz)
+; Copyright (C) 2012-2023 Patrik Rak (patrik@raxoft.cz)
 ;
 ; This source code is released under the MIT license, see included license.txt.
 
