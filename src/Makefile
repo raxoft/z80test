@@ -1,7 +1,7 @@
 # gmake
 
 NAME = z80test
-VERSION = 1.2
+VERSION = 1.2a
 PKG := $(NAME)-$(VERSION)
 
 PROGS := z80full z80flags z80doc z80docflags z80ccf z80memptr z80ccfscr
